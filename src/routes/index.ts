@@ -9,11 +9,11 @@ import getMoodsMW from "../middleware/moods/getMoodsMW.js";
 import jsonResponseMW from "../middleware/jsonResponseMW.js";
 import wildcardMW from "../middleware/wildcardMW.js";
 
-export function initRoutes(app: Application, DB: Database, Validator: Object) {
+export function initRoutes(app: Application, DB: Database, Validator: Object, ApplicationLogger: Object, AccessLogger: Object, ErrorLogger: Object) {
     const { Users, Moods } = DB;
     const objectRepository: any = {
         Users, Moods,
-        Validator
+        Validator, ApplicationLogger, AccessLogger, ErrorLogger
     };
 
     // TODO: rate limiting middleware on login route

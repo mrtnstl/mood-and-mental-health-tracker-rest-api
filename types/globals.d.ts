@@ -16,4 +16,9 @@ declare global {
         userName: string,
         userEmail: string,
     }
+    type logger = {
+        ApplicationLogger: Object,
+        AccessLogger: Object,
+        ErrorLogger: Object
+    }
 }

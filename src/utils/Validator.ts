@@ -1,6 +1,6 @@
 class ValidatorUtility {
-    isFalsy(input: string | number | boolean | object) { return input ? false : true; }
-    isTruthy(input: string | number | boolean | object) { return input ? true : false; }
-    isUndefined(input: string | number | boolean | object) { return input === "undefined" ? true : false }
+    isFalsy(input: any) { return input ? false : true; }
+    isTruthy(input: any) { return input ? true : false; }
+    isUndefined(input: any) { return input === "undefined" ? true : false }
 }
 export default ValidatorUtility;
