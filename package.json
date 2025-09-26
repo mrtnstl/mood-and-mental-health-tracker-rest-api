@@ -1,0 +1,23 @@
+{
+  "name": "mood-and-mental-health-tracker-api",
+  "version": "1.0.0",
+  "description": "A REST API written in TypeScript with functions to track users mood, sleeping schedule, eating habits and stress level, allowing the program to suggest mitigation strategies against unbalanced lifestyle with LLM integration.",
+  "main": "./dist/app.js",
+  "type": "module",
+  "scripts": {
+    "dev:watch-js": "node --watch ./dist/app.js",
+    "dev:watch-ts": "npx tsc --watch",
+    "build": "npx tsc"
+  },
+  "author": "Márton Spiteller",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0"
+  }
+}
