@@ -16,9 +16,12 @@ declare global {
         userName: string,
         userEmail: string,
     }
-    type logger = {
+    type AppConfig = {
+        sinkLogsToConsole: boolean
+    }
+    /*type logger = {
         ApplicationLogger: Object,
         AccessLogger: Object,
         ErrorLogger: Object
-    }
+    }*/
 }

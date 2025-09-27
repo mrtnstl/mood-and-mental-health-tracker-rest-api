@@ -8,6 +8,7 @@ import getMoodsMW from "../middleware/moods/getMoodsMW.js";
 // other middleware
 import jsonResponseMW from "../middleware/jsonResponseMW.js";
 import wildcardMW from "../middleware/wildcardMW.js";
+import errorHandlerMW from "../middleware/errorHandlerMW.js";
 
 export function initRoutes(app: Application, DB: Database, Validator: Object, ApplicationLogger: Object, AccessLogger: Object, ErrorLogger: Object) {
     const { Users, Moods } = DB;
@@ -33,4 +34,5 @@ export function initRoutes(app: Application, DB: Database, Validator: Object, Ap
     // wildcard route
     app.use(wildcardMW());
 
+    app.use(errorHandlerMW(objectRepository));
 }

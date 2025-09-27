@@ -4,7 +4,7 @@
  * 
  * application log should contain: timestamp, application event(startup, shutdown), os data
  * access log should contain: timestamp, client IP, HTTP method, URI, response code, latency, user agent
- * error log should contain: timestamp, error code, error type, error message
+ * error log should contain: timestamp, error code, error type/name, error message
  */
 import EventEmitter from "node:events";
 import { appendFile } from "node:fs/promises";
@@ -13,15 +13,17 @@ import os from "node:os";
 
 class Logger extends EventEmitter {
     protected logsDir: string;
-    constructor() {
+    protected sinkLogsToConsole: boolean = false;
+    constructor(appConfig: AppConfig) {
         super();
         this.logsDir = process.env.LOGS_DIR || path.resolve(process.cwd(), "logs");
+        this.sinkLogsToConsole = appConfig.sinkLogsToConsole;
     }
 }
 
 class ApplicationLogger extends Logger {
-    constructor() {
-        super();
+    constructor(appConfig: AppConfig) {
+        super(appConfig);
     }
     log(event: string) {
         const timestamp = new Date;
@@ -30,35 +32,37 @@ class ApplicationLogger extends Logger {
     }
     subscribeToEvent() {
         this.on("applog", log => {
-            console.log(log); // TODO: app config should determine if loggers sink to console or not
+            this.sinkLogsToConsole && console.log(log); // TODO: app config should determine if loggers sink to console or not
             appendFile(`${this.logsDir}/application_log.txt`, log);
         })
     }
 }
 class AccessLogger extends Logger {
-    constructor() {
-        super();
+    constructor(appConfig: AppConfig) {
+        super(appConfig);
     }
     log() { // TODO: finish this
         this.emit("accesslog", "access log placeholder");
     }
     subscribeToEvent() {
         this.on("accesslog", log => {
-            console.log(log);
+            this.sinkLogsToConsole && console.log(log);
             appendFile(`${this.logsDir}/access_log.txt`, log);
         })
     }
 }
 class ErrorLogger extends Logger {
-    constructor() {
-        super();
+    constructor(appConfig: AppConfig) {
+        super(appConfig);
     }
-    log() { // TODO: finish this too
-        this.emit("errlog", "error log placeholder");
+    log(code: string, type: string, message: string) {
+        const timestamp = new Date;
+        const logBody = `${timestamp.toISOString()};${code};${type};${message}\n`;
+        this.emit("errlog", logBody);
     }
     subscribeToEvent() {
         this.on("errlog", log => {
-            console.log(log);
+            this.sinkLogsToConsole && console.log(log);
             appendFile(`${this.logsDir}/error_log.txt`, log);
         })
     }

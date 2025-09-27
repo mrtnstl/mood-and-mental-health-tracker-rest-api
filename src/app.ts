@@ -1,4 +1,6 @@
 import "dotenv/config";
+import appConfig from "./appConfig.js";
+
 import express, { type Application } from "express";
 import { initDb } from "./services/db/mockDb.js";
 import { initRoutes } from "./routes/index.js";
@@ -13,15 +15,15 @@ import RandomIdGenerators from "./utils/RandomIdGenerators.js";
 // import loggers
 import { ApplicationLogger as AppLogger, AccessLogger as AccLogger, ErrorLogger as ErrLogger } from "./services/Logger.js";
 // init loggers and subscribe to events
-const ApplicationLogger = new AppLogger();
+const ApplicationLogger = new AppLogger(appConfig);
 ApplicationLogger.subscribeToEvent();
-const AccessLogger = new AccLogger();
+const AccessLogger = new AccLogger(appConfig);
 AccessLogger.subscribeToEvent();
-const ErrorLogger = new ErrLogger();
+const ErrorLogger = new ErrLogger(appConfig);
 ErrorLogger.subscribeToEvent();
 
 AccessLogger.log(); // TODO: test purposes only
-ErrorLogger.log(); // TODO: test purposes only
+ErrorLogger.log("-1", "test", "test"); // TODO: test purposes only
 
 const PORT = process.env.PORT || 3001;
 
