@@ -19,6 +19,12 @@ class Logger extends EventEmitter {
         this.logsDir = process.env.LOGS_DIR || path.resolve(process.cwd(), "logs");
         this.sinkLogsToConsole = appConfig.sinkLogsToConsole;
     }
+    subscribeToEvent(event: string, fileName: string) {
+        this.on(event, log => {
+            this.sinkLogsToConsole && console.log(log);
+            appendFile(`${this.logsDir}/${fileName}.txt`, log);
+        })
+    }
 }
 
 class ApplicationLogger extends Logger {
@@ -30,25 +36,15 @@ class ApplicationLogger extends Logger {
         const logBody = `${timestamp.toISOString()};${event};${os.platform()}/${os.type()}/${os.release()} ${os.arch()} ${os.hostname()} ${(os.freemem() / (1024 * 1024 * 1024)).toFixed(2)}GB/${(os.totalmem() / (1024 * 1024 * 1024)).toFixed(2)}GB\n`;
         this.emit("applog", logBody);
     }
-    subscribeToEvent() {
-        this.on("applog", log => {
-            this.sinkLogsToConsole && console.log(log); // TODO: app config should determine if loggers sink to console or not
-            appendFile(`${this.logsDir}/application_log.txt`, log);
-        })
-    }
 }
 class AccessLogger extends Logger {
     constructor(appConfig: AppConfig) {
         super(appConfig);
     }
-    log() { // TODO: finish this
-        this.emit("accesslog", "access log placeholder");
-    }
-    subscribeToEvent() {
-        this.on("accesslog", log => {
-            this.sinkLogsToConsole && console.log(log);
-            appendFile(`${this.logsDir}/access_log.txt`, log);
-        })
+    log(clientIp: string, method: string, uri: string, resCode: string, latency: string, userAgent: string) { // TODO: finish and manually test this method
+        const timestamp = new Date;
+        const logBody = `${timestamp.toISOString()};${clientIp};${method};${uri};${resCode};${latency};${userAgent}\n`;
+        this.emit("accesslog", logBody);
     }
 }
 class ErrorLogger extends Logger {
@@ -59,12 +55,6 @@ class ErrorLogger extends Logger {
         const timestamp = new Date;
         const logBody = `${timestamp.toISOString()};${code};${type};${message}\n`;
         this.emit("errlog", logBody);
-    }
-    subscribeToEvent() {
-        this.on("errlog", log => {
-            this.sinkLogsToConsole && console.log(log);
-            appendFile(`${this.logsDir}/error_log.txt`, log);
-        })
     }
 }
 

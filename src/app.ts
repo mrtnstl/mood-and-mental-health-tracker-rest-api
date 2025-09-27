@@ -16,13 +16,13 @@ import RandomIdGenerators from "./utils/RandomIdGenerators.js";
 import { ApplicationLogger as AppLogger, AccessLogger as AccLogger, ErrorLogger as ErrLogger } from "./services/Logger.js";
 // init loggers and subscribe to events
 const ApplicationLogger = new AppLogger(appConfig);
-ApplicationLogger.subscribeToEvent();
+ApplicationLogger.subscribeToEvent("applog", "application_log");
 const AccessLogger = new AccLogger(appConfig);
-AccessLogger.subscribeToEvent();
+AccessLogger.subscribeToEvent("accesslog", "access_log");
 const ErrorLogger = new ErrLogger(appConfig);
-ErrorLogger.subscribeToEvent();
+ErrorLogger.subscribeToEvent("errlog", "error_log");
 
-AccessLogger.log(); // TODO: test purposes only
+AccessLogger.log("127.0.0.1", "null", "null", "000", "0", "none"); // TODO: test purposes only
 ErrorLogger.log("-1", "test", "test"); // TODO: test purposes only
 
 const PORT = process.env.PORT || 3001;
